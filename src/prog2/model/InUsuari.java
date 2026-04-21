@@ -13,7 +13,7 @@ public interface InUsuari {
 
     String getAdreca();
 
-    String tipusClient();
+    String tipusUsuari();
 
     void setNumPrestecsNormals(int numPrestecsNormals);
 
