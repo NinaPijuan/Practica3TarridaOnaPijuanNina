@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Dades implements InDades, Serializable {
-    // NO afegir mètodes nous
+    // No afegir mètodes nous
 
     public Dades() {
 
