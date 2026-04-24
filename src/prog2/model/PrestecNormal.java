@@ -4,8 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class PrestecNormal extends Prestec implements Serializable {
-    public PrestecNormal(Exemplar exemplar, Usuari usuari, Date dataCreacio, Date dataLimitRetorn, boolean retornat) {
-        super(exemplar, usuari, 70);
+
+    public PrestecNormal(Exemplar exemplar, Usuari usuari, Date dataCreacio) {
+        super(exemplar, usuari, 70, dataCreacio);
     }
 
     @Override

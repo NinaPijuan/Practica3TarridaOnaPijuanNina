@@ -8,8 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class PrestecLlarg extends Prestec implements Serializable {
-    public PrestecLlarg(Exemplar exemplar, Usuari usuari, Date dataCreacio, Date dataLimitRetorn, boolean retornat) {
-        super(exemplar, usuari, retornat, 140);
+
+    public PrestecLlarg(Exemplar exemplar, Usuari usuari, Date dataCreacio) {
+        super(exemplar, usuari, 140, dataCreacio);
     }
 
     @Override

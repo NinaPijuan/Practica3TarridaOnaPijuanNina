@@ -16,25 +16,15 @@ public class Llista<T> implements Serializable {
        llista = new ArrayList<>();
     }
 
-    public int getSize() {
-          // TO-BE-DONE
-    }
+    public int getSize() { return llista.size(); }
 
-    public void afegir(T t) throws BiblioException {
-          // TO-BE-DONE
-    }
+    public void afegir(T t) throws BiblioException { llista.add(t); }
 
-    public T getAt(int position) {
-          // TO-BE-DONE
-    }
+    public T getAt(int position) { return llista.get(position); }
 
-    public void clear() {
-          // TO-BE-DONE
-    }
+    public void clear() { llista.clear(); }
 
-    public boolean isEmpty() {
-          // TO-BE-DONE
-    }
+    public boolean isEmpty() { return (llista.size() == 0); }
 
     public ArrayList<T> getArrayList() {
         ArrayList<T> arrlist = new ArrayList<>(llista);

@@ -2,20 +2,23 @@ package prog2.model;
 
 import java.io.Serializable;
 
-// Setters, getters i toString
 public abstract class Usuari implements InUsuari, Serializable {
     private String email;
     private String nom;
     private String adreca;
     private int numPrestecsNormals;
     private int numPrestecstLlargs;
+    private int maxPrestecsNormals;
+    private int maxPrestecsLlargs;
 
-    public Usuari(String email, String nom, String adreca, int numPrestecsNormals, int numPrestecstLlargs) {
+    public Usuari(String email, String nom, String adreca, int maxPrestecsNormals, int maxPrestecstLlargs) {
         this.email = email;
         this.nom = nom;
         this.adreca = adreca;
-        this.numPrestecsNormals = numPrestecsNormals;
-        this.numPrestecstLlargs = numPrestecstLlargs;
+        this.maxPrestecsNormals = maxPrestecsNormals;
+        this.maxPrestecsLlargs = maxPrestecstLlargs;
+        this.numPrestecstLlargs = 0; // 0 per def kuan creem usuari
+        this.numPrestecsNormals = 0; // 0 per def kuan creem usuari
     }
     @Override
     public void setEmail(String email) {
@@ -47,10 +50,11 @@ public abstract class Usuari implements InUsuari, Serializable {
         return adreca;
     }
 
+    /**
+     * Mètode abstracte que definim en les subclasses
+     */
     @Override
-    public String tipusUsuari() {
-        return null;
-    }
+    public abstract String tipusUsuari();
 
     @Override
     public void setNumPrestecsNormals(int numPrestecsNormals) {
@@ -68,17 +72,21 @@ public abstract class Usuari implements InUsuari, Serializable {
     }
 
     @Override
-    public int getNumPrestecsLlargs() {
+    public int getNumPrestecsLlargs() { return numPrestecstLlargs; }
+
+    @Override
+    public int getMaxPrestecsNormals() { return numPrestecsNormals; }
+
+    @Override
+    public int getMaxPrestecsLlargs() {
         return numPrestecstLlargs;
     }
 
     @Override
-    public int getMaxPrestecsNormals() {
-        return 0;
+    public String toString(){
+        return "Tipus=" + tipusUsuari() + ", Email=" + email + ", Nom=" + nom + ", Adreça="
+                + adreca + ", Num. préstecs normals=" + numPrestecsNormals + ", Num. préstecs llargs="
+                + numPrestecstLlargs;
     }
 
-    @Override
-    public int getMaxPrestecsLlargs() {
-        return 0;
-    }
 }

@@ -1,104 +1,106 @@
 package prog2.model;
 
+import prog2.vista.BiblioException;
+
 import java.io.Serializable;
 import java.util.Date;
-// toString
+
+// EM SEMBLA MOLT KUE FALTA UN THROW EN EL TEST DE RETORNA (p.retorna())
 public abstract class Prestec implements InPrestec, Serializable {
     private Exemplar exemplar;
     private Usuari usuari;
+    private long durada; // Mil·lisegons
     private Date dataCreacio;
     private Date dataLimitRetorn;
     private boolean retornat;
-    private long durada; // Mil·lisegons
 
-    public Prestec(Exemplar exemplar, Usuari usuari, long durada) {
+    public Prestec(Exemplar exemplar, Usuari usuari, long durada, Date dataCreacio) {
         this.exemplar = exemplar;
         this.usuari = usuari;
-        this.durada = durada;
-        // exemplar.setDisponible(false)
-        // Posar no disponible l'exemplar
-        this.dataCreacio = new Date(); // Crea date amb data actual
-        dataLimitRetorn.setTime(dataCreacio.getTime() + durada);
-
-        retornat = false;
+        this.durada = durada * 1000;
+        this.dataCreacio = dataCreacio;
+        this.dataLimitRetorn.setTime(dataCreacio.getTime() + duradaPrestec());
+        retornat = false; // Kuan creem un préstec, retorn = false per definició
     }
     @Override
-    public void setExemplar(Exemplar exemplar) {
-
-    }
+    public void setExemplar(Exemplar exemplar) { this.exemplar = exemplar; }
 
     @Override
-    public Exemplar getExemplar() {
-        return null;
-    }
+    public Exemplar getExemplar() { return exemplar; }
 
     @Override
-    public void setUsuari(Usuari usuari) {
-
-    }
+    public void setUsuari(Usuari usuari) { this.usuari = usuari; }
 
     @Override
-    public Usuari getUsuari() {
-        return null;
-    }
+    public Usuari getUsuari() { return usuari; }
 
     @Override
-    public void setDataCreacio(Date data) {
-
-    }
+    public void setDataCreacio(Date data) { this.dataCreacio = data; }
 
     @Override
-    public Date getDataCreacio() {
-        return null;
-    }
+    public Date getDataCreacio() { return dataCreacio; }
 
     @Override
-    public void setDataLimitRetorn(Date data) {
-
-    }
+    public void setDataLimitRetorn(Date data) { this.dataLimitRetorn = dataLimitRetorn; }
 
     @Override
-    public Date getDataLimitRetorn() {
-        return null;
-    }
+    public Date getDataLimitRetorn() { return dataLimitRetorn; }
+
+    /**
+     * Mètode que definim en cada subclasse
+     */
+    @Override
+    public abstract String tipusPrestec();
 
     @Override
-    public String tipusPrestec() {
-        return null;
-    }
+    public void setRetornat(boolean retornat) { this.retornat = retornat; }
 
     @Override
-    public void setRetornat(boolean retornat) {
-
-    }
-
-    @Override
-    public boolean getRetornat() {
-        return false;
-    }
+    public boolean getRetornat() { return retornat; }
 
     /**
      * Retornar prestec. Llança excepció si el prestec ja es vaig retornar
      */
     @Override
-    public void retorna() {
-        // Posar exemplar a disponible
+    public void retorna() throws BiblioException {
+
+        if(exemplar.isDisponible()){ throw new BiblioException("L'exemplar ja ha estat retornat"); }
+
+        // Si encara no ha estat retornat:
+        exemplar.setDisponible(true);
         retornat = true;
+
     }
 
     /**
-     * Retornar durada prestec. La durada del prestec depen del tipus de prestec
+     * Retorna la durada del préstec
      */
     @Override
-    public long duradaPrestec() {
-        return 0;
-    }
+    public long duradaPrestec(){ return durada; }
 
     /**
      * Retornar true si el prestec està endarrerit per a la data actual
      */
     @Override
     public boolean prestecEndarrerit() {
-        return false;
+
+        boolean endarrerit = false;
+        if(!retornat){
+
+            Date avui = new Date(); // Crea date amb data actual
+            // Mirem si la data de retorn ja ha passat
+            if (dataLimitRetorn.before(avui)){ endarrerit = true; }
+        }
+
+        return endarrerit;
+
+    }
+
+
+    @Override
+    public String toString(){
+        return "Tipus=" + tipusPrestec() + ", Exemplar=" + exemplar + ", Data de creació="
+                + dataCreacio + ", Data límit de retorn=" + dataLimitRetorn + ", Retornat="
+                + retornat;
     }
 }

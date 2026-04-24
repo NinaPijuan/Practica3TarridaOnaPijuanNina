@@ -3,7 +3,7 @@ package prog2.model;
 import java.io.Serializable;
 
 public class Estudiant extends Usuari implements Serializable {
-    public Estudiant(String email, String nom, String adreca, int numPrestecsNormals, int numPrestecstLlargs) {
+    public Estudiant(String email, String nom, String adreca) {
         super(email, nom, adreca, 2, 1);
     }
 
@@ -16,4 +16,7 @@ public class Estudiant extends Usuari implements Serializable {
     public int getMaxPrestecsLlargs() {
         return super.getMaxPrestecsLlargs();
     }
+
+    @Override
+    public String tipusUsuari(){ return "Estudiant"; }
 }
