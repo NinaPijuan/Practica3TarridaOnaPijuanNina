@@ -8,6 +8,9 @@ import java.util.Iterator;
 // NO TÉ ATRIBUTS NI CONSTRUCTORS PK JA ESTAN A LLISTA
 public class LlistaUsuaris extends Llista<Usuari> implements Serializable {
 
+    public LlistaUsuaris() {
+        super();
+    }
 
     /**
      * Mètode que afegeix un usuari a la llista (reescrit perquè s'afegeix amb condicions)
@@ -26,6 +29,30 @@ public class LlistaUsuaris extends Llista<Usuari> implements Serializable {
         }
 
         llista.add(usuari);
+    }
+
+    public boolean contains(String email) {
+        Iterator<Usuari> it = llista.iterator();
+        Usuari usuariAux;
+        while (it.hasNext()) {
+            usuariAux = it.next();
+            if (usuariAux.getEmail().equals(email)) return true;
+        }
+        return false;
+    }
+
+    public void esborrar(Usuari usuari) throws BiblioException {
+        Iterator<Usuari> it = llista.iterator();
+        Usuari usuariAux;
+        boolean trobat = false;
+        while (it.hasNext() && !trobat) {
+            usuariAux = it.next();
+            if (usuariAux.getEmail().equals(usuari.getEmail())) {
+                it.remove();
+                trobat = true;
+            }
+        }
+        if (!trobat) throw new BiblioException("No existeix");
     }
 
     // ITERADORS

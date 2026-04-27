@@ -62,9 +62,9 @@ public abstract class Prestec implements InPrestec, Serializable {
      * Retornar prestec. Llança excepció si el prestec ja es vaig retornar
      */
     @Override
-    public void retorna() throws BiblioException {
+    public void retorna() {
 
-        if(exemplar.isDisponible()){ throw new BiblioException("L'exemplar ja ha estat retornat"); }
+        // if(exemplar.isDisponible()){ throw new BiblioException("L'exemplar ja ha estat retornat"); }
 
         // Si encara no ha estat retornat:
         exemplar.setDisponible(true);

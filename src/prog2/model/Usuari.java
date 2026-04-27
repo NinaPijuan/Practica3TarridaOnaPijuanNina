@@ -75,11 +75,11 @@ public abstract class Usuari implements InUsuari, Serializable {
     public int getNumPrestecsLlargs() { return numPrestecstLlargs; }
 
     @Override
-    public int getMaxPrestecsNormals() { return numPrestecsNormals; }
+    public int getMaxPrestecsNormals() { return maxPrestecsNormals; }
 
     @Override
     public int getMaxPrestecsLlargs() {
-        return numPrestecstLlargs;
+        return maxPrestecsLlargs;
     }
 
     @Override

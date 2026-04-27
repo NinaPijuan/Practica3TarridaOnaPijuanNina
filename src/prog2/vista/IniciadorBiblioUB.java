@@ -1,7 +1,10 @@
 package prog2.vista;
 
 public class IniciadorBiblioUB {
-    private BiblioUB biblioUB;
-    // Crida gestioBiblioUB
-    // main???
+    public static void main(String[] args) {
+        BiblioUB biblioUB = new BiblioUB();
+
+        biblioUB.gestioBiblioUB();
+
+    }
 }

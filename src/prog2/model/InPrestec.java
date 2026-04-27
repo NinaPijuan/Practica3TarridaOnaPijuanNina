@@ -1,7 +1,4 @@
 package prog2.model;
-
-import prog2.vista.BiblioException;
-
 import java.util.Date;
 
 public interface InPrestec {
@@ -30,7 +27,7 @@ public interface InPrestec {
     /**
      * Retornar prestec. Llança excepció si el prestec ja es vaig retornar
      */
-    void retorna() throws BiblioException;
+    void retorna();
 
     /**
      * Retornar durada prestec. La durada del prestec depen del tipus de prestec
