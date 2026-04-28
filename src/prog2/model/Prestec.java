@@ -5,7 +5,6 @@ import prog2.vista.BiblioException;
 import java.io.Serializable;
 import java.util.Date;
 
-// EM SEMBLA MOLT KUE FALTA UN THROW EN EL TEST DE RETORNA (p.retorna())
 public abstract class Prestec implements InPrestec, Serializable {
     private Exemplar exemplar;
     private Usuari usuari;
@@ -19,7 +18,8 @@ public abstract class Prestec implements InPrestec, Serializable {
         this.usuari = usuari;
         this.durada = durada * 1000;
         this.dataCreacio = dataCreacio;
-        this.dataLimitRetorn.setTime(dataCreacio.getTime() + duradaPrestec());
+        this.dataLimitRetorn = new Date();
+        this.dataLimitRetorn.setTime(dataCreacio.getTime() + durada * 1000);
         retornat = false; // Kuan creem un préstec, retorn = false per definició
     }
     @Override
@@ -41,7 +41,7 @@ public abstract class Prestec implements InPrestec, Serializable {
     public Date getDataCreacio() { return dataCreacio; }
 
     @Override
-    public void setDataLimitRetorn(Date data) { this.dataLimitRetorn = dataLimitRetorn; }
+    public void setDataLimitRetorn(Date data) { this.dataLimitRetorn = data; }
 
     @Override
     public Date getDataLimitRetorn() { return dataLimitRetorn; }
@@ -69,6 +69,8 @@ public abstract class Prestec implements InPrestec, Serializable {
         // Si encara no ha estat retornat:
         exemplar.setDisponible(true);
         retornat = true;
+        if (this instanceof PrestecLlarg) usuari.setNumPrestecsLlargs(usuari.getNumPrestecsLlargs() - 1);
+        else usuari.setNumPrestecsNormals(usuari.getNumPrestecsNormals() - 1);
 
     }
 
@@ -99,7 +101,7 @@ public abstract class Prestec implements InPrestec, Serializable {
 
     @Override
     public String toString(){
-        return "Tipus=" + tipusPrestec() + ", Exemplar=" + exemplar + ", Data de creació="
+        return "Tipus=" + tipusPrestec() + ", Exemplar=" + exemplar.getTitol() + ", Usuari=" + usuari.getNom()+ ", Data de creació="
                 + dataCreacio + ", Data límit de retorn=" + dataLimitRetorn + ", Retornat="
                 + retornat;
     }

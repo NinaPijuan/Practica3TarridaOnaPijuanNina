@@ -20,7 +20,6 @@ public class Dades implements InDades, Serializable {
         this.llistaPrestecs = new LlistaPrestecs();
     }
 
-
     /**
      * Afegeix exemplar. Llança excepció si l'id ja existeix
      *
@@ -31,7 +30,6 @@ public class Dades implements InDades, Serializable {
      */
     @Override
     public void afegirExemplar(String id, String titol, String autor, boolean admetPrestecLlarg) throws BiblioException {
-
         // Creem un exemplar nou i el mètode afegir de LlistaExemplars gestiona la resta
         Exemplar exemplar = new Exemplar(id, titol, autor, admetPrestecLlarg);
         llistaExemplars.afegir(exemplar);
@@ -40,7 +38,7 @@ public class Dades implements InDades, Serializable {
 
     @Override
     public ArrayList<Exemplar> recuperaExemplars() {
-        return null;
+        return llistaExemplars.getArrayList();
     }
 
     /**
@@ -68,7 +66,7 @@ public class Dades implements InDades, Serializable {
 
     @Override
     public ArrayList<Usuari> recuperaUsuaris() {
-        return null;
+        return llistaUsuaris.getArrayList();
     }
 
     /**
@@ -112,16 +110,22 @@ public class Dades implements InDades, Serializable {
                 }
         }
 
-        // Si arribem fins akuí vol dir kue todo bien
+
+        // Mirem si l'usuari no supera el número de préstecs màxims
         // Creem préstec i l'afegim
         if(esLlarg){
+            if (usuari.getNumPrestecsLlargs() == usuari.getMaxPrestecsLlargs()){ throw new BiblioException("L'usuari supera el número màxim de préstecs llargs"); }
             PrestecLlarg prestec = new PrestecLlarg(exemplar, usuari, new Date());
             llistaPrestecs.afegir(prestec);
+            usuari.setNumPrestecsLlargs(usuari.getNumPrestecsLlargs() + 1);
         }
         else{
+            if (usuari.getNumPrestecsNormals() == usuari.getMaxPrestecsNormals()) { throw new BiblioException("L'usuari supera el número màxim de préstecs normals"); }
             PrestecNormal prestec = new PrestecNormal(exemplar, usuari, new Date());
             llistaPrestecs.afegir(prestec);
+            usuari.setNumPrestecsNormals(usuari.getNumPrestecsNormals() + 1);
         }
+        exemplar.setDisponible(false);
 
     }
 
@@ -137,18 +141,41 @@ public class Dades implements InDades, Serializable {
         // Llista té un mètode (getAt()) kue retorna l'objecte en la posició donada
         Prestec prestec = llistaPrestecs.getAt(position);
 
-        // El mètode retorna() de préstec ja gestiona la resta
+        // Llancem excepció si l'exemplar ja ha estat retornat
+        if (prestec.getRetornat()){ throw new BiblioException("L'exemplar ja ha estat retornat"); }
+
+        // Si no, el retornem amb el mètode de préstec
         prestec.retorna();
 
     }
 
+    /**
+     * @return array de tots els préstecs
+     */
     @Override
     public ArrayList<Prestec> recuperaPrestecs() {
-        return null;
+        return llistaPrestecs.getArrayList();
     }
 
+
+    /**
+     * Fa un recorregut per la llista de préstecs buscant els no retornats i els guarda en una llista
+     * @return array de préstecs no retornats
+     */
     @Override
     public ArrayList<Prestec> recuperaPrestecsNoRetornats() {
-        return null;
+
+        ArrayList<Prestec> noRetornats = new ArrayList<>();
+        Iterator<Prestec> it = llistaPrestecs.getArrayList().iterator();
+        while( it.hasNext() ){
+            Prestec pres = it.next();
+            if( !pres.getRetornat() ) {
+                noRetornats.add(pres);
+            }
+        }
+
+        return noRetornats;
     }
+
+
 }
