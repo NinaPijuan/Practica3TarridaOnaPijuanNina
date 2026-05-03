@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import prog2.vista.BiblioException;
 
 
-// FALTA CONTAINS I ESBORRAR
 public class Llista<T> implements Serializable {
    protected ArrayList<T> llista;
 

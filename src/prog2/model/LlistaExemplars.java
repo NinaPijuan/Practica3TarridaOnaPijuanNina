@@ -5,7 +5,6 @@ import prog2.vista.BiblioException;
 import java.io.Serializable;
 import java.util.Iterator;
 
-// NO TÉ ATRIBUTS NI CONSTRUCTORS PK JA ESTAN A LLISTA
 public class LlistaExemplars extends Llista<Exemplar> implements Serializable {
 
     public LlistaExemplars() {
@@ -56,7 +55,4 @@ public class LlistaExemplars extends Llista<Exemplar> implements Serializable {
         }
         if (!trobat) throw new BiblioException("No existeix");
     }
-
-
-    // ITERADORS
 }

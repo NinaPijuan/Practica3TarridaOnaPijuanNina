@@ -1,9 +1,5 @@
 package prog2.model;
 
-import prog2.model.Exemplar;
-import prog2.model.Prestec;
-import prog2.model.Usuari;
-
 import java.io.Serializable;
 import java.util.Date;
 

@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.Iterator;
 
 public class Dades implements InDades, Serializable {
-    // No afegir mètodes nous
 
     private LlistaUsuaris llistaUsuaris;
     private LlistaExemplars llistaExemplars;
