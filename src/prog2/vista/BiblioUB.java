@@ -127,7 +127,7 @@ public class BiblioUB {
                         // Guardar les dades al fitxer triat
                         try {
                              this.adaptador.guardaDades(dstFile);
-                             System.err.println("Dades guardades");
+                             System.out.println("Dades guardades");
                         } catch (BiblioException ex) {
                             System.out.println("Error guardant les dades: " + ex.getMessage());
                         }
@@ -140,7 +140,7 @@ public class BiblioUB {
                         // Carregar les dades del fitxer triat
                         try {
                              this.adaptador.carregaDades(srcFile);
-                             System.err.println("Dades carregades");
+                             System.out.println("Dades carregades");
                         } catch(BiblioException ex) {
                             System.out.println("Error carregant les dades:" + ex.getMessage());
                         }
@@ -177,7 +177,7 @@ public class BiblioUB {
                     break;
                 case MENU_GESTIO_EXEMPLARS_VIEW:
                     System.out.println("== EXEMPLARS ==");
-                    adaptador.visualitzarExemplars();
+                    visualitzar(adaptador.recuperarExemplars());
                     break;
                 case MENU_GESTIO_EXEMPLARS_EXIT:
                     System.out.println("Sortint del menú d'exemplars...");
@@ -206,9 +206,9 @@ public class BiblioUB {
             System.out.print("Introdueix ID de l'exemplar: ");
             id = sc.nextLine().trim();
             if (id.isEmpty()) {
-                System.err.println("  Error: l'ID no pot estar buit.");
+                System.err.println("Error: l'ID no pot estar buit.");
             } else if (!id.matches(REGEX_ID)) {
-                System.err.println("  Error: l'ID només pot contenir lletres, dígits i guions (-).");
+                System.err.println("Error: l'ID només pot contenir lletres, dígits i guions (-).");
                 id = "";
             }
         } while (id.isEmpty());
@@ -218,9 +218,9 @@ public class BiblioUB {
             System.out.print("Introdueix títol: ");
             titol = sc.nextLine().trim();
             if (titol.isEmpty()) {
-                System.err.println("  Error: el títol no pot estar buit.");
+                System.err.println("Error: el títol no pot estar buit.");
             } else if (titol.length() > MAX_LONGITUD_CAMP) {
-                System.err.println("  Error: el títol no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
+                System.err.println("Error: el títol no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
                 titol = "";
             }
         } while (titol.isEmpty());
@@ -230,9 +230,9 @@ public class BiblioUB {
             System.out.print("Introdueix autor: ");
             autor = sc.nextLine().trim();
             if (autor.isEmpty()) {
-                System.err.println("  Error: l'autor no pot estar buit.");
+                System.err.println("Error: l'autor no pot estar buit.");
             } else if (autor.length() > MAX_LONGITUD_CAMP) {
-                System.err.println("  Error: l'autor no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
+                System.err.println("Error: l'autor no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
                 autor = "";
             }
         } while (autor.isEmpty());
@@ -241,9 +241,9 @@ public class BiblioUB {
 
         try {
             adaptador.afegirExemplar(id, titol, autor, admetPrestecLlarg);
-            System.out.println("  Exemplar afegit correctament.");
+            System.out.println("Exemplar afegit correctament.");
         } catch (BiblioException ex) {
-            System.err.println("  Error afegint l'exemplar: " + ex.getMessage());
+            System.err.println("Error afegint l'exemplar: " + ex.getMessage());
         }
     }
 
@@ -270,7 +270,7 @@ public class BiblioUB {
                     break;
                 case MENU_GESTIO_USUARIS_VIEW:
                     System.out.println("== USUARIS ==");
-                    adaptador.visualitzarUsuaris();
+                    visualitzar(adaptador.recuperarUsuaris());
                     break;
                 case MENU_GESTIO_USUARIS_EXIT:
                     System.out.println("Sortint del menú d'usuaris...");
@@ -298,9 +298,9 @@ public class BiblioUB {
             System.out.print("Introdueix email: ");
             email = sc.nextLine().trim();
             if (email.isEmpty()) {
-                System.err.println("  Error: l'email no pot estar buit.");
+                System.err.println("Error: l'email no pot estar buit.");
             } else if (!email.matches(REGEX_EMAIL)) {
-                System.err.println("  Error: format d'email invàlid. Exemple: nom@ub.edu");
+                System.err.println("Error: format d'email invàlid. Exemple: nom@ub.edu");
                 email = "";
             }
         } while (email.isEmpty());
@@ -310,9 +310,9 @@ public class BiblioUB {
             System.out.print("Introdueix nom complet: ");
             nom = sc.nextLine().trim();
             if (nom.isEmpty()) {
-                System.err.println("  Error: el nom no pot estar buit.");
+                System.err.println("Error: el nom no pot estar buit.");
             } else if (nom.length() > MAX_LONGITUD_CAMP) {
-                System.err.println("  Error: el nom no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
+                System.err.println("Error: el nom no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
                 nom = "";
             }
         } while (nom.isEmpty());
@@ -322,9 +322,9 @@ public class BiblioUB {
             System.out.print("Introdueix adreça: ");
             adreca = sc.nextLine().trim();
             if (adreca.isEmpty()) {
-                System.err.println("  Error: l'adreça no pot estar buida.");
+                System.err.println("Error: l'adreça no pot estar buida.");
             } else if (adreca.length() > MAX_LONGITUD_CAMP) {
-                System.err.println("  Error: l'adreça no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
+                System.err.println("Error: l'adreça no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
                 adreca = "";
             }
         } while (adreca.isEmpty());
@@ -333,10 +333,10 @@ public class BiblioUB {
 
         try {
             adaptador.afegirUsuari(email, nom, adreca, esEstudiant);
-            System.out.println("  Usuari afegit correctament ("
+            System.out.println("Usuari afegit correctament ("
                     + (esEstudiant ? "Estudiant" : "Professor") + ").");
         } catch (BiblioException ex) {
-            System.err.println("  Error afegint l'usuari: " + ex.getMessage());
+            System.err.println("Error afegint l'usuari: " + ex.getMessage());
         }
     }
 
@@ -366,11 +366,11 @@ public class BiblioUB {
                     break;
                 case MENU_GESTIO_PRESTECS_VIEW:
                     System.out.println("== TOTS ELS PRÉSTECS ==");
-                    adaptador.visualitzarPrestecs();
+                    visualitzar(adaptador.recuperarPrestecs());
                     break;
                 case MENU_GESTIO_PRESTECS_VIEW_URG:
                     System.out.println("== PRÉSTECS NO RETORNATS ==");
-                    adaptador.visualitzarPrestecsNoRetornats();
+                    visualitzar(adaptador.recuperarPrestecsNoRetornats());
                     break;
                 case MENU_GESTIO_PRESTECS_EXIT:
                     System.out.println("Sortint del menú de préstecs...");
@@ -399,37 +399,37 @@ public class BiblioUB {
         int numUsuaris   = adaptador.getNumUsuaris();
 
         if (numExemplars == 0) {
-            System.err.println("  No hi ha cap exemplar registrat. Afegiu exemplars primer.");
+            System.err.println("No hi ha cap exemplar registrat. Afegiu exemplars primer.");
             return;
         }
         if (numUsuaris == 0) {
-            System.err.println("  No hi ha cap usuari registrat. Afegiu usuaris primer.");
+            System.err.println("No hi ha cap usuari registrat. Afegiu usuaris primer.");
             return;
         }
 
         System.out.println("-- Exemplars disponibles --");
-        adaptador.visualitzarExemplarsIndexats();
-
-        System.out.println("-- Usuaris registrats --");
-        adaptador.visualitzarUsuarisIndexats();
+        visualitzar(adaptador.recuperarExemplars(), "Disponible=true");
 
         // Posició de l'exemplar
-        int exemplarPos = llegirEnterEnRang(sc, "Introdueix l'índex de l'exemplar [0 - " + (numExemplars - 1) + "]: ",
+        int exemplarPos = llegirEnterEnRang(sc, "Introdueix l'índex de l'exemplar: ",
                 0, numExemplars - 1);
 
+        System.out.println("-- Usuaris registrats --");
+        visualitzar(adaptador.recuperarUsuaris());
+
         // Posició de l'usuari
-        int usuariPos = llegirEnterEnRang(sc, "Introdueix l'índex de l'usuari [0 - " + (numUsuaris - 1) + "]: ",
+        int usuariPos = llegirEnterEnRang(sc, "Introdueix l'índex de l'usuari: ",
                 0, numUsuaris - 1);
 
         // Tipus de préstec
-        boolean esLlarg = llegirSiNo(sc, "És un préstec llarg? (si, no)");
+        boolean esLlarg = llegirSiNo(sc, "És un préstec llarg? ");
 
         // Afegir préstec
         try {
             adaptador.afegirPrestec(exemplarPos, usuariPos, esLlarg);
-            System.out.println("  Préstec creat correctament (" + (esLlarg ? "Llarg" : "Normal") + ").");
+            System.out.println("Préstec creat correctament (" + (esLlarg ? "Llarg" : "Normal") + ").");
         } catch (BiblioException ex) {
-            System.err.println("  Error creant el préstec: " + ex.getMessage());
+            System.err.println("Error creant el préstec: " + ex.getMessage());
         }
     }
 
@@ -449,24 +449,23 @@ public class BiblioUB {
         int numPrestecs = adaptador.getNumPrestecs();
 
         if (numPrestecs == 0) {
-            System.out.println("  No hi ha cap préstec registrat.");
+            System.out.println("No hi ha cap préstec registrat.");
             return;
         }
 
         // Mostrem tots els préstecs amb els índexs
         System.out.println("-- Préstecs registrats --");
-        adaptador.visualitzarPrestecsIndexats();
+        visualitzar(adaptador.recuperarPrestecs(), "Retornat=false");
 
         // Posició del préstec
-        int posicio = llegirEnterEnRang(sc, "Introdueix l'índex del préstec a retornar [0 - " + (numPrestecs - 1)
-                + "]: ", 0, numPrestecs - 1);
+        int posicio = llegirEnterEnRang(sc, "Introdueix l'índex del préstec a retornar: ", 0, numPrestecs - 1);
 
         // Retornar préstec
         try {
             adaptador.retornarPrestec(posicio);
-            System.out.println("  Préstec retornat correctament");
+            System.out.println("Préstec retornat correctament");
         } catch (BiblioException ex) {
-            System.err.println("  Error retornant el préstec: " + ex.getMessage());
+            System.err.println("Error retornant el préstec: " + ex.getMessage());
         }
     }
 
@@ -528,17 +527,17 @@ public class BiblioUB {
             System.out.print(missatge);
             String linia = sc.nextLine().trim();
             if (linia.isEmpty()) {
-                System.err.println("  Error: cal introduir un número.");
+                System.err.println("Error: cal introduir un número.");
             } else {
                 try {
                     valor = Integer.parseInt(linia);
                     if (valor < min || valor > max) {
-                        System.err.println("  Error: el valor ha d'estar entre " + min + " i " + max + ".");
+                        System.err.println("Error: el valor ha d'estar entre " + min + " i " + max + ".");
                     } else {
                         return valor;
                     }
                 } catch (NumberFormatException e) {
-                    System.err.println("  Error: '" + linia + "' no és un número enter vàlid.");
+                    System.err.println("Error: '" + linia + "' no és un número enter vàlid.");
                 }
             }
         }
@@ -559,9 +558,30 @@ public class BiblioUB {
             System.out.print(missatge + " (si/no): ");
             resposta = sc.nextLine().trim().toLowerCase();
             if (!resposta.equals("si") && !resposta.equals("no")) {
-                System.err.println("  Error: introdueix 'si' o 'no'.");
+                System.err.println("Error: introdueix 'si' o 'no'.");
             }
         } while (!resposta.equals("si") && !resposta.equals("no"));
         return resposta.equals("si");
+    }
+
+    private void visualitzar(List<String> llista) {
+        if (llista.isEmpty()) {
+            System.out.println("  (cap registrat)");
+            return;
+        }
+        for (int i = 0; i < llista.size(); i++) {
+                System.out.println(" [" + i + "] " + llista.get(i));
+        }
+    }
+
+    private void visualitzar(List<String> llista, String requisit) {
+        if (llista.isEmpty()) {
+            System.out.println("  (cap registrat)");
+            return;
+        }
+        for (int i = 0; i < llista.size(); i++) {
+            if (llista.get(i).contains(requisit))
+                System.out.println(" [" + i + "] " + llista.get(i));
+        }
     }
 }

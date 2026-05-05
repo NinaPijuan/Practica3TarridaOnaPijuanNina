@@ -94,15 +94,15 @@ public class Dades implements InDades, Serializable {
             }
         }
 
-        // Buskuem l'usuari i li agafem el nom
+        // Buskuem l'usuari i li agafem el email
         Usuari usuari = llistaUsuaris.getAt(usuariPos);
-        String nomUsuari = usuari.getNom();
+        String emailUsuari = usuari.getEmail();
 
         // Buskuem dins de llistaPrestecs l'usuari, i si el trobem mirem si el préstec està endarrerit
         Iterator<Prestec> it = llistaPrestecs.getArrayList().iterator();
         while( it.hasNext() ){
                 Prestec pres = it.next();
-                if( pres.getUsuari().getNom().equals(nomUsuari) ) {
+                if( pres.getUsuari().getEmail().equals(emailUsuari) ) {
                     if (pres.prestecEndarrerit()) {
                         throw new BiblioException("L'usuari té préstecs endarrerits");
                     }

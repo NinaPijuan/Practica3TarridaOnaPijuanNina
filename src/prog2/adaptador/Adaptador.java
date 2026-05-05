@@ -9,6 +9,7 @@ import prog2.vista.BiblioException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Adaptador implements Serializable {
     private Dades dades;
@@ -17,42 +18,64 @@ public class Adaptador implements Serializable {
         this.dades = new Dades();
     }
 
+    /**
+     * Retorna llista amb tots els exemplars
+     */
+    public List<String> recuperarExemplars() {
+        ArrayList<Exemplar> exemplars = dades.recuperaExemplars();
+        ArrayList<String> llista = new ArrayList<>();
+        Iterator<Exemplar> it = exemplars.iterator();
+        while(it.hasNext()) {
+            llista.add(it.next().toString());
+        }
+        return llista;
+    }
+
+    /** Retorna llista amb tots els usuaris
+     */
+    public List<String> recuperarUsuaris() {
+        ArrayList<Usuari> usuaris = dades.recuperaUsuaris();
+        ArrayList<String> llista = new ArrayList<>();
+        Iterator<Usuari> it = usuaris.iterator();
+        while(it.hasNext()) {
+            llista.add(it.next().toString());
+        }
+        return llista;
+    }
+
+    /** Retorna llista amb tots els préstecs (retornats i no retornats).
+     */
+    public List<String> recuperarPrestecs() {
+        ArrayList<Prestec> prestecs = dades.recuperaPrestecs();
+        ArrayList<String> llista = new ArrayList<>();
+        Iterator<Prestec> it = prestecs.iterator();
+        while(it.hasNext()) {
+            llista.add(it.next().toString());
+        }
+        return llista;
+    }
+
+    /**
+     * Retorna llista amb els préstecs que encara no han estat retornats.
+     */
+    public List<String> recuperarPrestecsNoRetornats() {
+        ArrayList<Prestec> prestecsNR = dades.recuperaPrestecsNoRetornats();
+        ArrayList<String> llista = new ArrayList<>();
+        Iterator<Prestec> it = prestecsNR.iterator();
+        while(it.hasNext()) {
+            llista.add(it.next().toString());
+        }
+        return llista;
+    }
+
+
     // EXEMPLARS
 
     /**
-     * Crea i afegeix un exemplar a la llista d'exemplars.
+     * Crea i afegeix un exemplar a la llista d'exemplars.rec
      */
     public void afegirExemplar(String id, String titol, String autor, boolean admetPrestecLlarg) throws BiblioException {
         dades.afegirExemplar(id, titol, autor, admetPrestecLlarg);
-    }
-
-    /**
-     * Imprimeix tots els exemplars sense índex.
-     */
-    public void visualitzarExemplars(){
-        ArrayList<Exemplar> llista = dades.recuperaExemplars();
-        if (llista.isEmpty()) {
-            System.out.println("  (cap exemplar registrat)");
-            return;
-        }
-        Iterator<Exemplar> it = llista.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next());
-        }
-    }
-
-    /**
-     * Imprimeix tots els exemplars amb el seu índex al davant
-     */
-    public void visualitzarExemplarsIndexats() {
-        ArrayList<Exemplar> llista = dades.recuperaExemplars();
-        if (llista.isEmpty()) {
-            System.out.println("  (cap exemplar registrat");
-            return;
-        }
-        for (int i = 0; i < llista.size(); i++) {
-            System.out.println(" [" + i + "] " + llista.get(i));
-        }
     }
 
     /**
@@ -71,33 +94,6 @@ public class Adaptador implements Serializable {
         dades.afegirUsuari(email, nom, adreca, esEstudiant);
     }
 
-    /** Imprimeix tots els usuaris sense índex.
-     */
-    public void visualitzarUsuaris(){
-        ArrayList<Usuari> llista = dades.recuperaUsuaris();
-        if (llista.isEmpty()) {
-            System.out.println("  (cap usuari registrat)");
-            return;
-        }
-        Iterator<Usuari> it = llista.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next());
-        }
-    }
-
-    /**
-     * Imprimeix tots els usuaris amb el seu índex al davant
-     */
-    public void visualitzarUsuarisIndexats() {
-        ArrayList<Usuari> llista = dades.recuperaUsuaris();
-        if (llista.isEmpty()) {
-            System.out.println("  (cap usuari registrat)");
-            return;
-        }
-        for (int i = 0; i < llista.size(); i++) {
-            System.out.println("  [" + i + "] " + llista.get(i));
-        }
-    }
 
     /** Retorna el nombre d'usuaris registrats.
      */
@@ -119,49 +115,6 @@ public class Adaptador implements Serializable {
      */
     public void retornarPrestec(int position) throws BiblioException {
         dades.retornarPrestec(position);
-    }
-
-    /** Imprimeix tots els préstecs (retornats i no retornats).
-     */
-    public void visualitzarPrestecs() {
-        ArrayList<Prestec> llista = dades.recuperaPrestecs();
-        if (llista.isEmpty()) {
-            System.out.println("  (cap préstec registrat)");
-            return;
-        }
-        Iterator<Prestec> it = llista.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next());
-        }
-    }
-
-    /**
-     * Imprimeix tots els préstecs amb l'índex al davant
-     */
-    public void visualitzarPrestecsIndexats() {
-        ArrayList<Prestec> llista = dades.recuperaPrestecs();
-        if (llista.isEmpty()) {
-            System.out.println("  (cap préstec registrat)");
-            return;
-        }
-        for (int i = 0; i < llista.size(); i++) {
-            System.out.println("  [" + i + "] " + llista.get(i));
-        }
-    }
-
-    /**
-     * Imprimeix els préstecs que encara no han estat retornats.
-     */
-    public void visualitzarPrestecsNoRetornats() {
-        ArrayList<Prestec> llista = dades.recuperaPrestecsNoRetornats();
-        if (llista.isEmpty()) {
-            System.out.println("  (cap préstec pendent de retorn)");
-            return;
-        }
-        Iterator<Prestec> it = llista.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next());
-        }
     }
 
     /** Retorna el nombre total de préstecs registrats.
