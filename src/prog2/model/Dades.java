@@ -7,12 +7,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+/**
+ * Classe de model central que gestiona totes les dades de la biblioteca.
+ */
 public class Dades implements InDades, Serializable {
-
     private LlistaUsuaris llistaUsuaris;
     private LlistaExemplars llistaExemplars;
     private LlistaPrestecs llistaPrestecs;
 
+    /**
+     * Constructor.
+     */
     public Dades() {
         this.llistaUsuaris = new LlistaUsuaris();
         this.llistaExemplars = new LlistaExemplars();
@@ -20,33 +25,41 @@ public class Dades implements InDades, Serializable {
     }
 
     /**
-     * Afegeix exemplar. Llança excepció si l'id ja existeix
+     * Crea un exemplar i l'afegeix a la llista d'exemplars
      *
-     * @param id
-     * @param titol
-     * @param autor
-     * @param admetPrestecLlarg
+     * @param id                Identificador únic de l'exemplar
+     * @param titol             Títol del document
+     * @param autor             Autor del document
+     * @param admetPrestecLlarg true si l'exemplar permet préstecs llargs
+     *                          false en cas contrari
+     * @throws BiblioException Si ja existeix un exemplar amb el mateix id
      */
     @Override
     public void afegirExemplar(String id, String titol, String autor, boolean admetPrestecLlarg) throws BiblioException {
         // Creem un exemplar nou i el mètode afegir de LlistaExemplars gestiona la resta
         Exemplar exemplar = new Exemplar(id, titol, autor, admetPrestecLlarg);
         llistaExemplars.afegir(exemplar);
-
     }
 
+    /**
+     * Retorna tots els exmeplars registrats a la biblioteca.
+     *
+     * @return ArrayList amb tots els objectes Exemplar registrats
+     */
     @Override
     public ArrayList<Exemplar> recuperaExemplars() {
         return llistaExemplars.getArrayList();
     }
 
     /**
-     * Afegeix usuari. Llança excepció si l'email ja existeix
+     * Crea un usuari (estudiant o professor) i l'afegeix a la llista d'usuaris
      *
-     * @param email
-     * @param nom
-     * @param adreca
-     * @param esEstudiant
+     * @param email       Correu electrònic de l'usuari (identificador únic)
+     * @param nom         Nom de l'usuari
+     * @param adreca      Adreça de l'usuari
+     * @param esEstudiant true per crear un Estudiant
+     *                    false per crear un Professor
+     * @throws BiblioException Si ja existeix un usuari amb el mateix email
      */
     @Override
     public void afegirUsuari(String email, String nom, String adreca, boolean esEstudiant) throws BiblioException {
@@ -63,42 +76,48 @@ public class Dades implements InDades, Serializable {
 
     }
 
+    /**
+     * Retorna tots els usuaris registrats a la biblioteca.
+     *
+     * @return ArrayList amb tots els objectes Usuari registrats
+     */
     @Override
     public ArrayList<Usuari> recuperaUsuaris() {
         return llistaUsuaris.getArrayList();
     }
 
     /**
-     * Afegeix préstec. Ha de fer diferents comprovacions que poden llançar excepcions.
+     * Crea un nou préstec i l'afegeix a la llista de préstecs.
+     * Ha de fer diferents comprovacions que poden llançar excepcions.
      * Quan s'afegeix el préstec, s'han de tenir en compte les posicions d'exemplar
      * i usuari dins dels seus ArrayLists
      *
-     * @param exemplarPos
-     * @param usuariPos
-     * @param esLlarg
+     * @param exemplarPos Índex de l'exemplar dins de la seva llista
+     * @param usuariPos   Índex de l'usuari dins de la seva llista
+     * @param esLlarg     true per crear un PrestecLlarg
+     *                    false per crear un PrestecNormal
+     * @throws BiblioException Si no es compleix alguna de les condicions de validació
      */
     @Override
     public void afegirPrestec(int exemplarPos, int usuariPos, boolean esLlarg) throws BiblioException {
-        // Llista té un mètode (getAt()) kue retorna l'objecte en la posició donada
-        // El getAt() no tira cap throw a InLlista així k entenc k donem per suposat k tot existeix i sempre es troba
+        // Llista té un mètode (getAt()) que retorna l'objecte en la posició donada
 
-
-        // Buskuem exemplar i mirem si està disponible
+        // Obtenim l'exemplar i comprovem que està disponible
         Exemplar exemplar = llistaExemplars.getAt(exemplarPos);
         if(!exemplar.isDisponible()){ throw new BiblioException("Exemplar no disponible"); }
 
-        // En cas kue es vulgui fer un préstec llarg, mirem si l'exemplar ho admet
+        // Si és préstec llarg, mirem si l'exemplar ho permet
         if(esLlarg) {
             if (!exemplar.getAdmetPrestecLlarg()) {
                 throw new BiblioException("L'exemplar no admet un préstec llarg");
             }
         }
 
-        // Buskuem l'usuari i li agafem el email
+        // Obtenim l'usuari i guardem el email
         Usuari usuari = llistaUsuaris.getAt(usuariPos);
         String emailUsuari = usuari.getEmail();
 
-        // Buskuem dins de llistaPrestecs l'usuari, i si el trobem mirem si el préstec està endarrerit
+        // Busquem l'usuari dins de llistaPrestecs, i si el trobem mirem si el préstec està endarrerit
         Iterator<Prestec> it = llistaPrestecs.getArrayList().iterator();
         while( it.hasNext() ){
                 Prestec pres = it.next();
@@ -109,35 +128,36 @@ public class Dades implements InDades, Serializable {
                 }
         }
 
-
-        // Mirem si l'usuari no supera el número de préstecs màxims
-        // Creem préstec i l'afegim
+        // Comprovem que l'usuari no superi el límit de préstecs i creem el préstec del tipus concret
         if(esLlarg){
-            if (usuari.getNumPrestecsLlargs() == usuari.getMaxPrestecsLlargs()){ throw new BiblioException("L'usuari supera el número màxim de préstecs llargs"); }
+            if (usuari.getNumPrestecsLlargs() == usuari.getMaxPrestecsLlargs()){ throw new
+                    BiblioException("L'usuari supera el número màxim de préstecs llargs"); }
             PrestecLlarg prestec = new PrestecLlarg(exemplar, usuari, new Date());
             llistaPrestecs.afegir(prestec);
             usuari.setNumPrestecsLlargs(usuari.getNumPrestecsLlargs() + 1);
         }
         else{
-            if (usuari.getNumPrestecsNormals() == usuari.getMaxPrestecsNormals()) { throw new BiblioException("L'usuari supera el número màxim de préstecs normals"); }
+            if (usuari.getNumPrestecsNormals() == usuari.getMaxPrestecsNormals()) { throw new
+                    BiblioException("L'usuari supera el número màxim de préstecs normals"); }
             PrestecNormal prestec = new PrestecNormal(exemplar, usuari, new Date());
             llistaPrestecs.afegir(prestec);
             usuari.setNumPrestecsNormals(usuari.getNumPrestecsNormals() + 1);
         }
-        exemplar.setDisponible(false);
 
+        // Marquem l'exemplar com a no disponible
+        exemplar.setDisponible(false);
     }
 
     /**
-     * Retornar préstec. Llança excepció si el prestec ja es vaig retornar.
-     * El préstec s'identifica amb la seva posició dins de l'ArrayList
+     * Marca un préstec existent com a retornat.
+     * El préstec s'identifica amb la seva posició dins de l'ArrayList.
      *
-     * @param position
+     * @param position índex del préstec dins de la llista de préstecs
+     * @throws BiblioException Si el préstec indicat ja havia estat retornat
      */
     @Override
     public void retornarPrestec(int position) throws BiblioException {
-
-        // Llista té un mètode (getAt()) kue retorna l'objecte en la posició donada
+        // Llista té un mètode (getAt()) que retorna l'objecte en la posició donada
         Prestec prestec = llistaPrestecs.getAt(position);
 
         // Llancem excepció si l'exemplar ja ha estat retornat
@@ -145,36 +165,34 @@ public class Dades implements InDades, Serializable {
 
         // Si no, el retornem amb el mètode de préstec
         prestec.retorna();
-
     }
 
     /**
-     * @return array de tots els préstecs
+     * Retorna tots els préstecs registrats (actius i retornats).
+     *
+     * @return Arraylist amb tots els objectes Prestec
      */
     @Override
     public ArrayList<Prestec> recuperaPrestecs() {
         return llistaPrestecs.getArrayList();
     }
 
-
     /**
-     * Fa un recorregut per la llista de préstecs buscant els no retornats i els guarda en una llista
-     * @return array de préstecs no retornats
+     * Retorna únicament els préstecs que encara no han estat retornats.
+     *
+     * @return ArrayList amb els Prestec no retornats
      */
     @Override
     public ArrayList<Prestec> recuperaPrestecsNoRetornats() {
-
         ArrayList<Prestec> noRetornats = new ArrayList<>();
+
         Iterator<Prestec> it = llistaPrestecs.getArrayList().iterator();
-        while( it.hasNext() ){
+        while(it.hasNext()){
             Prestec pres = it.next();
             if( !pres.getRetornat() ) {
                 noRetornats.add(pres);
             }
         }
-
         return noRetornats;
     }
-
-
 }

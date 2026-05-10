@@ -10,10 +10,11 @@ import java.util.Scanner;
 import prog2.adaptador.Adaptador;
 
 /**
- *
- * @author dortiz
+ * Controlador principal de la interfície d'usuari de BibilioUB.
  */
 public class BiblioUB {
+
+    // ENUMERACIONS DE MENÚ
     
     // Declarem les constants del menu principal
     static private enum OpcionsMenuPrincipal {
@@ -69,6 +70,7 @@ public class BiblioUB {
                                                      "Visualitzar Prestecs no Retornats",
                                                      "Sortir"};
 
+    // CONSTANTS DE VALIDACIÓ
 
     // Longitud màxima permesa per als camps de text
     private static final int MAX_LONGITUD_CAMP = 100;
@@ -78,15 +80,25 @@ public class BiblioUB {
 
     // Regex per validar emails
     private static final String REGEX_EMAIL = "^[a-zA-Z0-9\\+\\_\\.\\-]+@[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,}$";
-    
+
+    // ATRIBUTS
+
     /** Adaptador de l'aplicació */
     private Adaptador adaptador;
-    
-    /* Constructor*/
+
+    // CONSTRUCTOR
+
+    /** Constructor*/
     public BiblioUB() {
         adaptador = new Adaptador();
     }
-     
+
+    // MENÚ PRINCIPAL
+
+    /**
+     * Inicia el bucle principal de l'aplicació, mostrant el menú principal i
+     * executant l'opció triada per l'usuari fins que es demana sortir.
+     */
     public void gestioBiblioUB() {
         // Creem un objecte per llegir des del teclat
         Scanner sc = new Scanner(System.in);
@@ -153,9 +165,17 @@ public class BiblioUB {
             }
         } while(opcio != OpcionsMenuPrincipal.MENU_PRINCIPAL_EXIT);
     }
-    
+
+    // SUBMENÚS
+
+    /**
+     * Mostra i gestiona el submení de gestió d'exemplars fins que l'usuari
+     * decideix sortir.
+     *
+     * @param sc Scanner per llegir l'entrada de l'usuari
+     */
     private void menuGestioExemplars(Scanner sc) {
-        // Creem l'objecte per al menú. Li passem com a primer parÃ metre el nom del menú
+        // Creem l'objecte per al menú. Li passem com a primer paràmetre el nom del menú
         Menu<OpcionsMenuGestioExemplars> menu=new Menu<OpcionsMenuGestioExemplars>("Menu Exemplars",OpcionsMenuGestioExemplars.values());
 
         // Assignem la descripció de les opcions
@@ -188,67 +208,13 @@ public class BiblioUB {
     }
 
     /**
-     * Demana i valida totes les dades per afegir un exemplar nou.
+     * Mostra i gestiona el submenú de gestió d'usuaris fins que l'usuari
+     * decideixi sortir.
      *
-     * Validacions:
-     *  - ID: no buit, només alfanumèric i guions, màx 100 car.
-     *  - Títol: no buit, màx 100 car.
-     *  - Autor: no buit, màx 100 car.
-     *  - Admet préstec llarg: ha de ser exactament "si" o "no".
-     *
-     * @param sc Scanner actiu
+     * @param sc Scanner per llegir l'entrada de l'usuari
      */
-    private void afegirExemplar(Scanner sc){
-        System.out.println("=== AFEGIR EXEMPLAR ===");
-
-        String id;
-        do {
-            System.out.print("Introdueix ID de l'exemplar: ");
-            id = sc.nextLine().trim();
-            if (id.isEmpty()) {
-                System.err.println("Error: l'ID no pot estar buit.");
-            } else if (!id.matches(REGEX_ID)) {
-                System.err.println("Error: l'ID només pot contenir lletres, dígits i guions (-).");
-                id = "";
-            }
-        } while (id.isEmpty());
-
-        String titol;
-        do {
-            System.out.print("Introdueix títol: ");
-            titol = sc.nextLine().trim();
-            if (titol.isEmpty()) {
-                System.err.println("Error: el títol no pot estar buit.");
-            } else if (titol.length() > MAX_LONGITUD_CAMP) {
-                System.err.println("Error: el títol no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
-                titol = "";
-            }
-        } while (titol.isEmpty());
-
-        String autor;
-        do {
-            System.out.print("Introdueix autor: ");
-            autor = sc.nextLine().trim();
-            if (autor.isEmpty()) {
-                System.err.println("Error: l'autor no pot estar buit.");
-            } else if (autor.length() > MAX_LONGITUD_CAMP) {
-                System.err.println("Error: l'autor no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
-                autor = "";
-            }
-        } while (autor.isEmpty());
-
-        boolean admetPrestecLlarg = llegirSiNo(sc, "Admet préstecs llargs?");
-
-        try {
-            adaptador.afegirExemplar(id, titol, autor, admetPrestecLlarg);
-            System.out.println("Exemplar afegit correctament.");
-        } catch (BiblioException ex) {
-            System.err.println("Error afegint l'exemplar: " + ex.getMessage());
-        }
-    }
-
     private void menuGestioUsuaris(Scanner sc) {
-        // Creem l'objecte per al menú. Li passem com a primer parÃ metre el nom del menú
+        // Creem l'objecte per al menú. Li passem com a primer paràmetre el nom del menú
         Menu<OpcionsMenuGestioClients> menu=new Menu<OpcionsMenuGestioClients>("Menu Usuaris",OpcionsMenuGestioClients.values());
 
         // Assignem la descripció de les opcions
@@ -280,66 +246,11 @@ public class BiblioUB {
     }
 
     /**
-     * Demana i valida totes les dades per afegir un usuari nou.
+     * Mostra i gestiona el submenú de gestió de préstecs fins que l'usuari
+     * decideix sortir.
      *
-     * Validacions:
-     *  - Email: format vàlid (regex), no buit. Es torna a demanar fins que sigui correcte.
-     *  - Nom: no buit, màx 100 car..
-     *  - Adreça: no buida, màx 100 car.
-     *  - Tipus: ha de ser exactament "si" o "no".
-     *
-     * @param sc Scanner actiu
+     * @param sc Scanner per llegir l'entrada de l'usuari
      */
-    private void afegirUsuari(Scanner sc){
-        System.out.println("=== AFEGIR USUARI ===");
-
-        String email;
-        do {
-            System.out.print("Introdueix email: ");
-            email = sc.nextLine().trim();
-            if (email.isEmpty()) {
-                System.err.println("Error: l'email no pot estar buit.");
-            } else if (!email.matches(REGEX_EMAIL)) {
-                System.err.println("Error: format d'email invàlid. Exemple: nom@ub.edu");
-                email = "";
-            }
-        } while (email.isEmpty());
-
-        String nom;
-        do {
-            System.out.print("Introdueix nom complet: ");
-            nom = sc.nextLine().trim();
-            if (nom.isEmpty()) {
-                System.err.println("Error: el nom no pot estar buit.");
-            } else if (nom.length() > MAX_LONGITUD_CAMP) {
-                System.err.println("Error: el nom no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
-                nom = "";
-            }
-        } while (nom.isEmpty());
-
-        String adreca;
-        do {
-            System.out.print("Introdueix adreça: ");
-            adreca = sc.nextLine().trim();
-            if (adreca.isEmpty()) {
-                System.err.println("Error: l'adreça no pot estar buida.");
-            } else if (adreca.length() > MAX_LONGITUD_CAMP) {
-                System.err.println("Error: l'adreça no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
-                adreca = "";
-            }
-        } while (adreca.isEmpty());
-
-        boolean esEstudiant = llegirSiNo(sc, "És estudiant? (si = Estudiant, no = Professor)");
-
-        try {
-            adaptador.afegirUsuari(email, nom, adreca, esEstudiant);
-            System.out.println("Usuari afegit correctament ("
-                    + (esEstudiant ? "Estudiant" : "Professor") + ").");
-        } catch (BiblioException ex) {
-            System.err.println("Error afegint l'usuari: " + ex.getMessage());
-        }
-    }
-
     private void menuGestioPrestecs(Scanner sc) {
         // Creem l'objecte per al menú. Li passem com a primer parÃ metre el nom del menú
         Menu<OpcionsMenuGestioPrestecs> menu=new Menu<OpcionsMenuGestioPrestecs>("Menu Prestecs",OpcionsMenuGestioPrestecs.values());
@@ -379,25 +290,166 @@ public class BiblioUB {
         } while(opcio!=OpcionsMenuGestioPrestecs.MENU_GESTIO_PRESTECS_EXIT);
     }
 
+    // OPERACIONS
+
+    /**
+     * Demana i valida totes les dades per afegir un exemplar nou.
+     *
+     * Validacions:
+     *  - ID: no buit, només alfanumèric i guions, màx 100 car.
+     *  - Títol: no buit, màx 100 car.
+     *  - Autor: no buit, màx 100 car.
+     *  - Admet préstec llarg: ha de ser exactament "si" o "no".
+     *
+     * @param sc Scanner actiu
+     */
+    private void afegirExemplar(Scanner sc){
+        System.out.println("=== AFEGIR EXEMPLAR ===");
+
+        // Id de l'exemplar
+        String id;
+        do {
+            System.out.print("Introdueix ID de l'exemplar: ");
+
+            // .trim() treu els espais de davant i darrere del String
+            id = sc.nextLine().trim();
+
+            // Comprovar que no està buit i compleix el regex
+            if (id.isEmpty()) {
+                System.err.println("Error: l'ID no pot estar buit.");
+            } else if (!id.matches(REGEX_ID)) {
+                System.err.println("Error: l'ID només pot contenir lletres, dígits i guions (-).");
+                id = "";
+            }
+        } while (id.isEmpty());
+
+        // Títol
+        String titol;
+        do {
+            System.out.print("Introdueix títol: ");
+            titol = sc.nextLine().trim();
+            if (titol.isEmpty()) {
+                System.err.println("Error: el títol no pot estar buit.");
+            } else if (titol.length() > MAX_LONGITUD_CAMP) {
+                System.err.println("Error: el títol no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
+                titol = "";
+            }
+        } while (titol.isEmpty());
+
+        // Autor
+        String autor;
+        do {
+            System.out.print("Introdueix autor: ");
+            autor = sc.nextLine().trim();
+            if (autor.isEmpty()) {
+                System.err.println("Error: l'autor no pot estar buit.");
+            } else if (autor.length() > MAX_LONGITUD_CAMP) {
+                System.err.println("Error: l'autor no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
+                autor = "";
+            }
+        } while (autor.isEmpty());
+
+        // Tipus
+        boolean admetPrestecLlarg = llegirSiNo(sc, "Admet préstecs llargs?");
+
+        // Afegir l'exemplar a través de l'adaptador
+        try {
+            adaptador.afegirExemplar(id, titol, autor, admetPrestecLlarg);
+            System.out.println("Exemplar afegit correctament.");
+        } catch (BiblioException ex) {
+            System.err.println("Error afegint l'exemplar: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Demana i valida totes les dades per afegir un usuari nou.
+     *
+     * Validacions:
+     *  - Email: format vàlid (regex), no buit. Es torna a demanar fins que sigui correcte.
+     *  - Nom: no buit, màx 100 car.
+     *  - Adreça: no buida, màx 100 car.
+     *  - Tipus: ha de ser exactament "si" (estudiant) o "no" (professor).
+     *
+     * @param sc Scanner actiu
+     */
+    private void afegirUsuari(Scanner sc){
+        System.out.println("=== AFEGIR USUARI ===");
+
+        // email
+        String email;
+        do {
+            System.out.print("Introdueix email: ");
+            email = sc.nextLine().trim();
+            if (email.isEmpty()) {
+                System.err.println("Error: l'email no pot estar buit.");
+            } else if (!email.matches(REGEX_EMAIL)) {
+                System.err.println("Error: format d'email invàlid. Exemple: nom@ub.edu");
+                email = "";
+            }
+        } while (email.isEmpty());
+
+        // Nom
+        String nom;
+        do {
+            System.out.print("Introdueix nom complet: ");
+            nom = sc.nextLine().trim();
+            if (nom.isEmpty()) {
+                System.err.println("Error: el nom no pot estar buit.");
+            } else if (nom.length() > MAX_LONGITUD_CAMP) {
+                System.err.println("Error: el nom no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
+                nom = "";
+            }
+        } while (nom.isEmpty());
+
+        // Adreça
+        String adreca;
+        do {
+            System.out.print("Introdueix adreça: ");
+            adreca = sc.nextLine().trim();
+            if (adreca.isEmpty()) {
+                System.err.println("Error: l'adreça no pot estar buida.");
+            } else if (adreca.length() > MAX_LONGITUD_CAMP) {
+                System.err.println("Error: l'adreça no pot superar " + MAX_LONGITUD_CAMP + " caràcters.");
+                adreca = "";
+            }
+        } while (adreca.isEmpty());
+
+        // Tipus
+        boolean esEstudiant = llegirSiNo(sc, "És estudiant? (si = Estudiant, no = Professor)");
+
+        // Afegir l'usuari a través d'adaptador
+        try {
+            adaptador.afegirUsuari(email, nom, adreca, esEstudiant);
+            System.out.println("Usuari afegit correctament ("
+                    + (esEstudiant ? "Estudiant" : "Professor") + ").");
+        } catch (BiblioException ex) {
+            System.err.println("Error afegint l'usuari: " + ex.getMessage());
+        }
+    }
+
+
+
     /**
      * Demana i valida totes les dades per crear un préstec nou.
      *
      * Validacions:
-     *  - Mostra primer la llista d'exemplars i d'usuaris perquè l'usuari
+     *  - Mostra primer la llista d'exemplars i després la d'usuaris perquè l'usuari
      *    pugui veure els índexs disponibles.
      *  - exemplarPos: enter >= 0 i < nombre d'exemplars existents.
      *  - usuariPos  : enter >= 0 i < nombre d'usuaris existents.
-     *  - Tipus préstec: ha de ser exactament "si" o "no".
+     *  - Tipus préstec: ha de ser exactament "si" (llarg) o "no" (normal).
      *
      * @param sc Scanner actiu
      */
     private void afegirPrestec(Scanner sc){
         System.out.println("=== AFEGIR PRÉSTEC ===");
 
-        // Mostrem primer els exemplars i usuaris per facilitar la tria dels índexs
+        // Obtenir número d'exemplars i d'usuaris
         int numExemplars = adaptador.getNumExemplars();
         int numUsuaris   = adaptador.getNumUsuaris();
 
+        // Comprovar que cap de les dues llistes està buida
+        // Si ho està, mostra l'error per pantalla
         if (numExemplars == 0) {
             System.err.println("No hi ha cap exemplar registrat. Afegiu exemplars primer.");
             return;
@@ -407,6 +459,7 @@ public class BiblioUB {
             return;
         }
 
+        // Mostrar llista d'exemplars disponibles
         System.out.println("-- Exemplars disponibles --");
         visualitzar(adaptador.recuperarExemplars(), "Disponible=true");
 
@@ -414,6 +467,7 @@ public class BiblioUB {
         int exemplarPos = llegirEnterEnRang(sc, "Introdueix l'índex de l'exemplar: ",
                 0, numExemplars - 1);
 
+        // Mostrar llista d'usuaris
         System.out.println("-- Usuaris registrats --");
         visualitzar(adaptador.recuperarUsuaris());
 
@@ -453,7 +507,7 @@ public class BiblioUB {
             return;
         }
 
-        // Mostrem tots els préstecs amb els índexs
+        // Mostrem els préstecs que encara no han estat retornats amb els índexs
         System.out.println("-- Préstecs registrats --");
         visualitzar(adaptador.recuperarPrestecs(), "Retornat=false");
 
@@ -468,6 +522,8 @@ public class BiblioUB {
             System.err.println("Error retornant el préstec: " + ex.getMessage());
         }
     }
+
+    // ALTRES
 
      /**
      * Mostra una llista d'objectes
@@ -498,37 +554,47 @@ public class BiblioUB {
         // Mostrar el missatge demanant la entrada
         System.out.println("Entra ruta completa fitxer (o ENTER per ometre):");
 
-            // Llegim la ruta del fitxer
-            filePath = sc.nextLine();
+        // Llegim la ruta del fitxer
+        filePath = sc.nextLine();
 
-            // Si la ruta està buida retornem un null
-            if(filePath.isEmpty()) {
+        // Si la ruta està buida retornem un null
+        if(filePath.isEmpty()) {
                 return null;
-            }
+        }
 
         return filePath;
     }
 
     // MÈTODES AUXILIARS
+
     /**
      * Llegeix un enter del teclat dins del rang [min, max].
      * Gestiona entrades no numèriques i valors fora de rang mostrant
      * un missatge d'error i tornant a demanar.
      *
-     * @param sc     Scanner actiu
+     * @param sc       Scanner actiu
      * @param missatge Missatge que es mostra abans de llegir
-     * @param min    Valor mínim acceptat
-     * @param max    Valor màxim acceptat
+     * @param min      Valor mínim acceptat (inclòs)
+     * @param max      Valor màxim acceptat (inclòs)
      * @return Enter vàlid dins del rang
      */
     private int llegirEnterEnRang(Scanner sc, String missatge, int min, int max) {
         int valor;
+
+        // Bucle que només acaba quan s'ha introduit un valor dintre del rang
         while (true) {
             System.out.print(missatge);
+
+            // Llegim el String que ha introduit l'usuari
             String linia = sc.nextLine().trim();
+
+            // Comprovació que no sigui buida
             if (linia.isEmpty()) {
                 System.err.println("Error: cal introduir un número.");
+
             } else {
+
+                // Integer.parseInt(String) pot produir error si el String no és un valor numèric
                 try {
                     valor = Integer.parseInt(linia);
                     if (valor < min || valor > max) {
@@ -546,7 +612,7 @@ public class BiblioUB {
     /**
      * Llegeix una resposta de tipus si/no del teclat.
      * Accepta únicament "si" o "no" (en minúscules). Torna a demanar si
-     * l'entrada és diferent, evitant ambigüitat per majúscules o typos.
+     * l'entrada és diferent.
      *
      * @param sc       Scanner actiu
      * @param missatge Missatge que es mostra abans de llegir
@@ -564,21 +630,40 @@ public class BiblioUB {
         return resposta.equals("si");
     }
 
+    /**
+     * Mostra una llista numerada d'elements.
+     * Si la llista és buida, ho informa a l'usuari.
+     *
+     * @param llista Llista de cadenes a mostrar
+     */
     private void visualitzar(List<String> llista) {
+        // Llista buida
         if (llista.isEmpty()) {
             System.out.println("  (cap registrat)");
             return;
         }
+
+        // Mostrar elements de la llista amb índex
         for (int i = 0; i < llista.size(); i++) {
                 System.out.println(" [" + i + "] " + llista.get(i));
         }
     }
 
+    /**
+     * Mostra únicament els elements de la llista que contenen la subcadena requisit.
+     * S'utilitza, per exemple, per filtrar exemplars disponibles.
+     *
+     * @param llista    Llista de cadenes a filtrar i mostrar
+     * @param requisit  Subcadena que ha de contenir cada element per ser mostrat
+     */
     private void visualitzar(List<String> llista, String requisit) {
+        // Llista buida
         if (llista.isEmpty()) {
             System.out.println("  (cap registrat)");
             return;
         }
+
+        // Mostrar elements de la llista que compleixen el requisit amb l'índex
         for (int i = 0; i < llista.size(); i++) {
             if (llista.get(i).contains(requisit))
                 System.out.println(" [" + i + "] " + llista.get(i));
